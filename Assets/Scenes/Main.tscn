@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://crnun6pfjhtpl"]
+
+[ext_resource type="Script" uid="uid://chqinhqjyhubg" path="res://Scripts/Main.cs" id="1_kwblh"]
+[ext_resource type="PackedScene" uid="uid://cfw23m34a2at2" path="res://Assets/Scenes/Maps/MainScene.tscn" id="2_wkehv"]
+[ext_resource type="PackedScene" uid="uid://cvjvevqetjyqq" path="res://Assets/Scenes/Player/MainPlayer.tscn" id="2_ygaiq"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_kwblh")
+MainPlayerScene = ExtResource("2_ygaiq")
+Scene = ExtResource("2_wkehv")

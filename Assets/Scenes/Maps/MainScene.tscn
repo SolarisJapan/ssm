@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfw23m34a2at2"]
+
+[ext_resource type="Script" uid="uid://k588v051ptus" path="res://Scripts/Scene/MainScene.cs" id="1_45qeg"]
+[ext_resource type="Texture2D" uid="uid://seegp7laiyas" path="res://Assets/Texture/3_16.png" id="1_mm5s2"]
+
+[node name="MainScene" type="Node2D"]
+process_priority = 1
+script = ExtResource("1_45qeg")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.2, 0.2)
+motion_mirroring = Vector2(1920, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource("1_mm5s2")
+centered = false
