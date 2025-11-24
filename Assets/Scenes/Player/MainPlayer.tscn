@@ -42,10 +42,13 @@ _data = {
 &"idle": SubResource("Animation_bm5lw")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bm5lw"]
-size = Vector2(43, 63)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bm5lw"]
+radius = 19.0
+height = 62.0
 
 [node name="MainPlayer" type="CharacterBody2D"]
+floor_max_angle = 1.0471976
+floor_snap_length = 4.0
 script = ExtResource("1_bm5lw")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -60,5 +63,5 @@ libraries = {
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-6.5, -4.5)
-shape = SubResource("RectangleShape2D_bm5lw")
+position = Vector2(-7, -4)
+shape = SubResource("CapsuleShape2D_bm5lw")

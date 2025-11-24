@@ -7,9 +7,11 @@ namespace Game.Entities
 {
 	public partial class Player : EntityBase
 	{
+		private int _scale = 3;
 		public override void OnEnterScene(SceneBase scene)
 		{
 			GameLogger.Log($"Player {EntityId} entered scene {scene.SceneID}");
+			Scale = new Vector2(_scale, _scale);
 		}
 
 		protected override void InitializeComponents()

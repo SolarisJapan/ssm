@@ -10,10 +10,17 @@ namespace Game.Components
 
         public MovingStates State { get { return _state; } }
 
-        private float JumpForce = 400f;
+        private float JumpSpeed = 1200;
+        public Vector2 MaxVelocity = new Vector2(1200, 0);
+        public Vector2 SprintVelocity = new Vector2(2400, 0);
+        public Vector2 Acceleration = new Vector2(4000, 0);
+        public Vector2 AccelerationInAir = new Vector2(1000, 0);
+        public float Friction = 10000;
+        public float FrictionInAir = 8000;
+
+        public float Gravity = 3200;
+
         private MovingStates _state = MovingStates.Stopped;
-        private Vector2 _velocity = new Vector2(800, 800);
-        private float _gravity = 20f;
         private float _sprintMultiplier = 2f;
 
         private Vector2 _inputVector = Vector2.Zero;
@@ -28,9 +35,47 @@ namespace Game.Components
             if (Entity is not Player player)
                 throw new System.Exception("MoveComponent can only be used with Player entities.");
 
+            var velocity = player.Velocity;
+
             // TODO status component to get states like grounded, climbing, etc.
             bool onFloor = player.IsOnFloor();
-            if (_inputVector == Vector2.Zero)
+
+            if (!onFloor)
+            {
+                velocity.Y += Gravity * (float)delta;
+            }
+            else if (_jump)
+            {
+                velocity.Y = -JumpSpeed;
+            }
+            else
+            {
+                velocity.Y = 0;
+            }
+
+            // TODO: we need to use input.y for climbing
+            Vector2 effectiveAcceleration = onFloor ? Acceleration : AccelerationInAir;
+            if (_inputVector.X == 0)
+            {
+                var effectiveFriction = onFloor ? Friction : FrictionInAir;
+                GameLogger.Log($"Input X zzzero Velocity X: {velocity.X} ");
+                // friction
+                if (velocity.X != 0)
+                {
+                    velocity.X -= (velocity.X > 0 ? 1 : -1) * effectiveFriction * (float)delta;
+                    velocity.X = Mathf.Max(velocity.X, 0);
+                }
+            }
+            else
+            {
+                velocity.X += effectiveAcceleration.X * _inputVector.X * (float)delta;
+                velocity.X = Mathf.Clamp(velocity.X, -MaxVelocity.X, MaxVelocity.X);
+                GameLogger.Log($"Input X: {_inputVector.X} Velocity X: {velocity.X} ");
+            }
+
+            player.Velocity = velocity;
+
+            if (player.Velocity == Vector2.Zero)
             {
                 _state = MovingStates.Stopped;
             }
@@ -39,7 +84,14 @@ namespace Game.Components
                 _state = MovingStates.Walking;
             }
 
-            player.MoveAndCollide(_velocity * _inputVector * (float)delta);
+            player.MoveAndSlide();
+
+            if (player.Position.Y >= 3000)
+            {
+                GameLogger.Log($"Player fell out of bounds, resetting position. {player.Position}");
+                // reset
+                player.Position = new Vector2(0, 0);
+            }
         }
 
         public void SetInput(Vector2 input, bool jump, bool sprint, bool crouch)

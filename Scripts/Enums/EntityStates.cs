@@ -13,6 +13,7 @@ namespace Game.Enums
         Stopped,
         Walking,
         Running,
-        Climbing
+        Climbing,
+        InAir,
     }
 }

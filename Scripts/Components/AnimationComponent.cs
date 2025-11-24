@@ -27,25 +27,24 @@ namespace Game.Components
             if (_animationPlayer != null)
             {
                 string animationName = GetAnimationName();
-                if (_animationPlayer.CurrentAnimation != animationName)
+                if (animationName == null)
                 {
-                    if (animationName == null)
-                    {
-                        _animationPlayer.Stop();
-                    }
-                    else
-                    {
-                        var animation = _animationPlayer.GetAnimation(animationName);
-                        if (animation != null)
-                        {
-                            animation.LoopMode = Animation.LoopModeEnum.Linear;
-                            _animationPlayer.Play(animationName);
-                        }
-                        else
-                        {
-                            GameLogger.LogError($"AnimationComponent: Animation '{animationName}' not found on Entity {Entity.EntityId} type: {Entity.GetType().Name}.");
-                        }
-                    }
+                    _animationPlayer.Stop();
+                    return;
+                }
+
+                if (_animationPlayer.CurrentAnimation == animationName)
+                    return;
+
+                var animation = _animationPlayer.GetAnimation(animationName);
+                if (animation != null)
+                {
+                    animation.LoopMode = Animation.LoopModeEnum.Linear;
+                    _animationPlayer.Play(animationName);
+                }
+                else
+                {
+                    GameLogger.LogError($"AnimationComponent: Animation '{animationName}' not found on Entity {Entity.EntityId} type: {Entity.GetType().Name}.");
                 }
             }
         }

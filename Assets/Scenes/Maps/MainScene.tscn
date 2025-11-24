@@ -1,7 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://cfw23m34a2at2"]
+[gd_scene load_steps=8 format=3 uid="uid://cfw23m34a2at2"]
 
 [ext_resource type="Script" uid="uid://k588v051ptus" path="res://Scripts/Scene/MainScene.cs" id="1_45qeg"]
 [ext_resource type="Texture2D" uid="uid://seegp7laiyas" path="res://Assets/Texture/3_16.png" id="1_mm5s2"]
+[ext_resource type="Texture2D" uid="uid://cg3e4pc137toy" path="res://Assets/Texture/blue.jpeg" id="3_7f3pt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_810w8"]
+size = Vector2(12.181822, 1.84091)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_egg5q"]
+size = Vector2(5.863639, 1.84091)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7f3pt"]
+size = Vector2(223.40576, 217.45923)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_37eh8"]
+size = Vector2(224.1966, 228.16846)
 
 [node name="MainScene" type="Node2D"]
 process_priority = 1
@@ -16,3 +29,93 @@ motion_mirroring = Vector2(1920, 0)
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 texture = ExtResource("1_mm5s2")
 centered = false
+
+[node name="platform" type="StaticBody2D" parent="."]
+position = Vector2(235, 819)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform"]
+scale = Vector2(2.3688889, 0.3511111)
+texture = ExtResource("3_7f3pt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform"]
+scale = Vector2(44, 44)
+shape = SubResource("RectangleShape2D_810w8")
+
+[node name="platform2" type="StaticBody2D" parent="."]
+position = Vector2(1015, 818)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform2"]
+scale = Vector2(2.3688889, 0.3511111)
+texture = ExtResource("3_7f3pt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform2"]
+scale = Vector2(44, 44)
+shape = SubResource("RectangleShape2D_810w8")
+
+[node name="platform3" type="StaticBody2D" parent="."]
+position = Vector2(1640, 640)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform3"]
+scale = Vector2(1.1355557, 0.3511111)
+texture = ExtResource("3_7f3pt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform3"]
+scale = Vector2(44, 44)
+shape = SubResource("RectangleShape2D_egg5q")
+
+[node name="platform5" type="StaticBody2D" parent="."]
+position = Vector2(2018, 482)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform5"]
+scale = Vector2(1.1355557, 0.3511111)
+texture = ExtResource("3_7f3pt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform5"]
+scale = Vector2(44, 44)
+shape = SubResource("RectangleShape2D_egg5q")
+
+[node name="platform4" type="StaticBody2D" parent="."]
+position = Vector2(2577, 914)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform4"]
+scale = Vector2(2.3688889, 0.3511111)
+texture = ExtResource("3_7f3pt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform4"]
+scale = Vector2(44, 44)
+shape = SubResource("RectangleShape2D_810w8")
+
+[node name="platform6" type="StaticBody2D" parent="."]
+position = Vector2(3065.0002, 767)
+rotation = 2.5307274
+scale = Vector2(2.3688889, 0.3511111)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform6"]
+texture = ExtResource("3_7f3pt")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform6"]
+position = Vector2(0.24212646, -4.1972656)
+shape = SubResource("RectangleShape2D_7f3pt")
+metadata/_edit_group_ = true
+
+[node name="platform7" type="StaticBody2D" parent="."]
+position = Vector2(3527, 622.00006)
+rotation = -6.2831855
+scale = Vector2(2.3688889, 0.3511111)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="platform7"]
+texture = ExtResource("3_7f3pt")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform7"]
+position = Vector2(0.15557861, 5.951172)
+shape = SubResource("RectangleShape2D_37eh8")
+metadata/_edit_group_ = true
