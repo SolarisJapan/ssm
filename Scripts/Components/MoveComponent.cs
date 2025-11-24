@@ -90,6 +90,7 @@ namespace Game.Components
             player.Velocity = _velocity;
             player.MoveAndSlide();
 
+            // TODO Debugging only, remove later
             if (player.Position.Y >= 3000)
             {
                 GameLogger.Log($"Player fell out of bounds, resetting position. {player.Position}");
@@ -156,10 +157,6 @@ namespace Game.Components
                 _inputVector.Y = input.Y > 0 ? 1 : -1;
             }
 
-        }
-
-        private void TryJump()
-        {
         }
     }
 }
