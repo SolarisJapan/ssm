@@ -35,7 +35,7 @@ namespace Game.Components
             { MotionStates.Falling, new AnimationInfo("fall_begin", 1, "fall", 1) },
             { MotionStates.Landing, new AnimationInfo("land", 1, "land", 1) },
             { MotionStates.Walking, new AnimationInfo("run_begin", 1, "run", 1) },
-            { MotionStates.Running, new AnimationInfo("run", 3, "run", 3) },
+            { MotionStates.Running, new AnimationInfo("run", 2, "run", 2) },
         };
 
         AnimationPlayer _animationPlayer;
