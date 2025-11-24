@@ -2,6 +2,7 @@ using Godot;
 using Game.Core;
 using Game.Components;
 using Game.Scene;
+using System.Data;
 
 namespace Game.Entities
 {
@@ -25,6 +26,12 @@ namespace Game.Entities
 			{
 				_components[i].Initialize();
 			}
+		}
+
+		public override void OnUpdate(double delta)
+		{
+			GetNode<Label>("StatusText").Text = GetComponent<MoveComponent>().State.ToString();
+			GameLogger.Log($"Player {EntityId} state: {GetComponent<MoveComponent>().State.ToString()}");
 		}
 	}
 }

@@ -9,6 +9,10 @@ namespace Game.Components
     {
 
         public MovingStates State { get { return _state; } }
+        public Direction Direction
+        {
+            get { return _direction; }
+        }
 
         private float JumpSpeed = 1200;
         public Vector2 MaxVelocity = new Vector2(1200, 0);
@@ -17,16 +21,20 @@ namespace Game.Components
         public Vector2 AccelerationInAir = new Vector2(1000, 0);
         public float Friction = 10000;
         public float FrictionInAir = 8000;
-
         public float Gravity = 3200;
+        public float LandingTime = 0.1f;
 
         private MovingStates _state = MovingStates.Stopped;
         private float _sprintMultiplier = 2f;
+        private Vector2 _velocity = Vector2.Zero;
+        private Direction _direction = Direction.Forward;
 
         private Vector2 _inputVector = Vector2.Zero;
         private bool _jump;
         private bool _sprint;
         private bool _crouch;
+        private bool _onFloor;
+        private float _stickyTime;
 
         public MoveComponent(EntityBase entity) : base(entity) { }
 
@@ -35,55 +43,51 @@ namespace Game.Components
             if (Entity is not Player player)
                 throw new System.Exception("MoveComponent can only be used with Player entities.");
 
-            var velocity = player.Velocity;
+            _velocity = player.Velocity;
 
             // TODO status component to get states like grounded, climbing, etc.
-            bool onFloor = player.IsOnFloor();
+            _onFloor = player.IsOnFloor();
 
-            if (!onFloor)
+            if (!_onFloor)
             {
-                velocity.Y += Gravity * (float)delta;
+                _velocity.Y += Gravity * (float)delta;
             }
             else if (_jump)
             {
-                velocity.Y = -JumpSpeed;
+                _velocity.Y = -JumpSpeed;
             }
             else
             {
-                velocity.Y = 0;
+                _velocity.Y = 0;
             }
 
-            // TODO: we need to use input.y for climbing
-            Vector2 effectiveAcceleration = onFloor ? Acceleration : AccelerationInAir;
-            if (_inputVector.X == 0)
+            if (_inputVector.X != 0)
             {
-                var effectiveFriction = onFloor ? Friction : FrictionInAir;
-                GameLogger.Log($"Input X zzzero Velocity X: {velocity.X} ");
+                _direction = _inputVector.X > 0 ? Direction.Forward : Direction.Backward;
+            }
+
+            Vector2 effectiveAcceleration = _onFloor ? Acceleration : AccelerationInAir;
+
+            Vector2 effectiveMaxVelocity = _sprint ? (MaxVelocity * _sprintMultiplier) : MaxVelocity;
+            effectiveMaxVelocity = (_inputVector.X != 0) ? effectiveMaxVelocity : Vector2.Zero;
+
+            float effectiveFriction = _onFloor ? Friction : FrictionInAir;
+
+            if (Mathf.Abs(_velocity.X) > effectiveMaxVelocity.X)
+            {
                 // friction
-                if (velocity.X != 0)
-                {
-                    velocity.X -= (velocity.X > 0 ? 1 : -1) * effectiveFriction * (float)delta;
-                    velocity.X = Mathf.Max(velocity.X, 0);
-                }
+                _velocity.X += (_velocity.X > 0 ? -1 : 1) * effectiveFriction * (float)delta;
+                _velocity.X = Mathf.Clamp(_velocity.X, -effectiveMaxVelocity.X, effectiveMaxVelocity.X);
             }
             else
             {
-                velocity.X += effectiveAcceleration.X * _inputVector.X * (float)delta;
-                velocity.X = Mathf.Clamp(velocity.X, -MaxVelocity.X, MaxVelocity.X);
-                GameLogger.Log($"Input X: {_inputVector.X} Velocity X: {velocity.X} ");
+                _velocity.X += effectiveAcceleration.X * _inputVector.X * (float)delta;
+                _velocity.X = Mathf.Clamp(_velocity.X, -effectiveMaxVelocity.X, effectiveMaxVelocity.X);
             }
 
-            player.Velocity = velocity;
+            UpdateState(delta);
 
-            if (player.Velocity == Vector2.Zero)
-            {
-                _state = MovingStates.Stopped;
-            }
-            else
-            {
-                _state = MovingStates.Walking;
-            }
-
+            player.Velocity = _velocity;
             player.MoveAndSlide();
 
             if (player.Position.Y >= 3000)
@@ -92,6 +96,48 @@ namespace Game.Components
                 // reset
                 player.Position = new Vector2(0, 0);
             }
+        }
+
+        private void UpdateState(double delta)
+        {
+            var currentState = _state;
+            _stickyTime = Mathf.Max(_stickyTime - (float)delta, 0);
+            MovingStates newState = currentState;
+
+            if (_velocity == Vector2.Zero)
+            {
+                newState = MovingStates.Stopped;
+            }
+            else if (_velocity.Y < 0)
+            {
+                newState = MovingStates.Rising;
+            }
+            else if (_velocity.Y > 0)
+            {
+                newState = MovingStates.Falling;
+            }
+            else if (Mathf.Abs(_velocity.X) > MaxVelocity.X)
+            {
+                newState = MovingStates.Running;
+            }
+            else if (_velocity.X != 0)
+            {
+                newState = MovingStates.Walking;
+            }
+
+            if (currentState == MovingStates.Falling && _onFloor)
+            {
+                newState = MovingStates.Landing;
+                _stickyTime = LandingTime;
+            }
+
+            // if the player is landing and there is no further input, remain in landing state for a while
+            if (_stickyTime != 0 && currentState == MovingStates.Landing && newState == MovingStates.Stopped)
+            {
+                return;
+            }
+
+            _state = newState;
         }
 
         public void SetInput(Vector2 input, bool jump, bool sprint, bool crouch)
