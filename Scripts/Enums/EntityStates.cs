@@ -8,13 +8,15 @@ namespace Game.Enums
         Dead
     }
 
-    public enum MovingStates
+    public enum MotionStates
     {
         Stopped,
 
         JumpStart,
         Rising,
         Falling,
+        Flying,
+        Hovering,
         Landing,
         Walking,
         Running,

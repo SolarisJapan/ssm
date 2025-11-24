@@ -1,5 +1,6 @@
 using Godot;
 using Game.Core;
+using Game.Enums;
 using Game.Components;
 using Game.Scene;
 using System.Collections.Generic;
@@ -69,6 +70,11 @@ namespace Game.Entities
 
         virtual public void OnExitScene(SceneBase scene)
         {
+        }
+
+        public void SetDirection(Direction direction)
+        {
+            GetNode<Sprite2D>("Sprite2D").FlipH = direction == Direction.Backward;
         }
 
         public T GetComponent<T>() where T : ComponentBase

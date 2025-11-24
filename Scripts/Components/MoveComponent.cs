@@ -8,7 +8,7 @@ namespace Game.Components
     public class MoveComponent : ComponentBase
     {
 
-        public MovingStates State { get { return _state; } }
+        public MotionStates State { get { return _state; } }
         public Direction Direction
         {
             get { return _direction; }
@@ -24,7 +24,7 @@ namespace Game.Components
         public float Gravity = 3200;
         public float LandingTime = 0.1f;
 
-        private MovingStates _state = MovingStates.Stopped;
+        private MotionStates _state = MotionStates.Stopped;
         private float _sprintMultiplier = 2f;
         private Vector2 _velocity = Vector2.Zero;
         private Direction _direction = Direction.Forward;
@@ -40,13 +40,10 @@ namespace Game.Components
 
         public override void Update(double delta)
         {
-            if (Entity is not Player player)
-                throw new System.Exception("MoveComponent can only be used with Player entities.");
-
-            _velocity = player.Velocity;
+            _velocity = Entity.Velocity;
 
             // TODO status component to get states like grounded, climbing, etc.
-            _onFloor = player.IsOnFloor();
+            _onFloor = Entity.IsOnFloor();
 
             if (!_onFloor)
             {
@@ -64,6 +61,7 @@ namespace Game.Components
             if (_inputVector.X != 0)
             {
                 _direction = _inputVector.X > 0 ? Direction.Forward : Direction.Backward;
+                Entity.SetDirection(_direction);
             }
 
             Vector2 effectiveAcceleration = _onFloor ? Acceleration : AccelerationInAir;
@@ -87,15 +85,15 @@ namespace Game.Components
 
             UpdateState(delta);
 
-            player.Velocity = _velocity;
-            player.MoveAndSlide();
+            Entity.Velocity = _velocity;
+            Entity.MoveAndSlide();
 
             // TODO Debugging only, remove later
-            if (player.Position.Y >= 3000)
+            if (Entity.Position.Y >= 3000)
             {
-                GameLogger.Log($"Player fell out of bounds, resetting position. {player.Position}");
+                GameLogger.Log($"Player fell out of bounds, resetting position. {Entity.Position}");
                 // reset
-                player.Position = new Vector2(0, 0);
+                Entity.Position = new Vector2(0, 0);
             }
         }
 
@@ -103,37 +101,37 @@ namespace Game.Components
         {
             var currentState = _state;
             _stickyTime = Mathf.Max(_stickyTime - (float)delta, 0);
-            MovingStates newState = currentState;
+            MotionStates newState = currentState;
 
             if (_velocity == Vector2.Zero)
             {
-                newState = MovingStates.Stopped;
+                newState = MotionStates.Stopped;
             }
             else if (_velocity.Y < 0)
             {
-                newState = MovingStates.Rising;
+                newState = MotionStates.Rising;
             }
             else if (_velocity.Y > 0)
             {
-                newState = MovingStates.Falling;
+                newState = MotionStates.Falling;
             }
             else if (Mathf.Abs(_velocity.X) > MaxVelocity.X)
             {
-                newState = MovingStates.Running;
+                newState = MotionStates.Running;
             }
             else if (_velocity.X != 0)
             {
-                newState = MovingStates.Walking;
+                newState = MotionStates.Walking;
             }
 
-            if (currentState == MovingStates.Falling && _onFloor)
+            if (currentState == MotionStates.Falling && _onFloor)
             {
-                newState = MovingStates.Landing;
+                newState = MotionStates.Landing;
                 _stickyTime = LandingTime;
             }
 
             // if the player is landing and there is no further input, remain in landing state for a while
-            if (_stickyTime != 0 && currentState == MovingStates.Landing && newState == MovingStates.Stopped)
+            if (_stickyTime != 0 && currentState == MotionStates.Landing && newState == MotionStates.Stopped)
             {
                 return;
             }

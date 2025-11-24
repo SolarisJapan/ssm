@@ -31,7 +31,6 @@ namespace Game.Entities
 		public override void OnUpdate(double delta)
 		{
 			GetNode<Label>("StatusText").Text = GetComponent<MoveComponent>().State.ToString();
-			GameLogger.Log($"Player {EntityId} state: {GetComponent<MoveComponent>().State.ToString()}");
 		}
 	}
 }
