@@ -124,6 +124,8 @@ namespace Game.Entities
 
         virtual public void Init()
         {
+            CollisionLayer = CollisionLayers.Entities;
+            CollisionMask = 0xFFFFFFFF & ~CollisionLayers.Entities;
         }
 
         virtual protected List<ComponentBase> CreateAllComponents()

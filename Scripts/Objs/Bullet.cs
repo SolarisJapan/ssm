@@ -61,6 +61,9 @@ namespace Game.Objs
                     }
                     break;
             }
+
+            // update rotation
+            Rotation = _direction.Angle();
         }
 
         public override void Init()
