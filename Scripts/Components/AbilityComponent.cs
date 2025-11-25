@@ -54,7 +54,7 @@ namespace Game.Components
                 moveComponent.Direction == Direction.Forward ? new Vector2(1, 0) : new Vector2(-1, 0)
             );
             GameLogger.Log($"Enity {Entity.EntityId} cast ability {abilityType}");
-            _currentAbilityRemainTime = 1.0f;
+            _currentAbilityRemainTime = 0.5f;
             return true;
         }
         #endregion
