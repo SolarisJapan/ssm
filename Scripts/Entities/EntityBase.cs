@@ -3,6 +3,7 @@ using Game.Core;
 using Game.Enums;
 using Game.Components;
 using Game.Scene;
+using Game.Objs;
 using System.Collections.Generic;
 
 
@@ -10,8 +11,14 @@ namespace Game.Entities
 {
     public partial class EntityBase : CharacterBody2D
     {
+        #region PUBLIC ATTRIBUTES
+
         public ulong EntityId => _entityId;
         public bool IsReady => _ready;
+
+        EntityBase Master;
+
+        #endregion
 
         private ulong _entityId;
         private bool _ready = false;
@@ -20,7 +27,7 @@ namespace Game.Entities
         protected List<ComponentBase> _components = [];
         protected Dictionary<System.Type, int> _componentTypeIndexMap = new();
 
-        // GODOT METHODS ----- begin ----
+        #region GODOT METHODS
         public override void _EnterTree()
         {
 
@@ -42,11 +49,17 @@ namespace Game.Entities
         {
             Update(delta);
         }
-        // GODOT METHODS ----- end ----
+        #endregion
 
+        #region PUBLIC API
         public EntityBase()
         {
             _entityId = GameObjID.GetNextID();
+        }
+
+        virtual public void SetMaster(EntityBase master)
+        {
+            Master = master;
         }
 
         virtual public void OnUpdate(double delta)
@@ -70,6 +83,19 @@ namespace Game.Entities
 
         virtual public void OnExitScene(SceneBase scene)
         {
+        }
+
+        virtual public void OnHitByObj(GameObjBase obj)
+        {
+            if (obj is Bullet bullet)
+            {
+                OnHitByBullet(bullet);
+            }
+        }
+
+        virtual public void OnHitByBullet(Bullet bullet)
+        {
+            GameLogger.Log($"Entity {EntityId} hit by bullet from Entity {bullet.OwnerEntity?.EntityId}");
         }
 
         public void SetDirection(Direction direction)
@@ -100,6 +126,18 @@ namespace Game.Entities
         {
         }
 
+        virtual protected List<ComponentBase> CreateAllComponents()
+        {
+            return new List<ComponentBase>
+            {
+                new MoveComponent(this),
+                new StateComponent(this),
+                new AnimationComponent(this)
+            };
+        }
+
+        #endregion
+
         protected void Update(double delta)
         {
             UpdateComponents(delta);
@@ -108,9 +146,7 @@ namespace Game.Entities
 
         virtual protected void InitializeComponents()
         {
-            _components.Add(new MoveComponent(this));
-            _components.Add(new StateComponent(this));
-            _components.Add(new AnimationComponent(this));
+            _components = CreateAllComponents();
 
             for (int i = 0; i < _components.Count; i++)
             {

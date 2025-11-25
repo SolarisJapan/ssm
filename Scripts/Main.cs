@@ -20,16 +20,21 @@ public partial class Main : Node
 
 		var scene = Scene.Instantiate<SceneBase>();
 		AddChild(scene);
+		GameState.Instance.SetCurrentScene(scene);
 
 		var player = MainPlayerScene.Instantiate<Player>();
 		AddChild(player);
 
+		var mob = GD.Load<PackedScene>("res://Assets/Scenes/Mobs/Strawman.tscn").Instantiate<Mob>();
+		GameLogger.Log($"Mob instantiated with EntityId {mob}");
+		AddChild(mob);
+
 		scene.AddEntity(player);
+		scene.AddEntity(mob);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		TickMgr.Instance.Update(delta);
 	}
 }

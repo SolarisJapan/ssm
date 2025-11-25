@@ -5,6 +5,8 @@ namespace Game.Components
     public class ComponentBase
     {
         private EntityBase _entity;
+
+        #region PUBLIC API
         public EntityBase Entity
         {
             get { return _entity; }
@@ -25,5 +27,6 @@ namespace Game.Components
         {
 
         }
+        #endregion
     }
 }

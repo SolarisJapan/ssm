@@ -8,13 +8,13 @@ namespace Game.Components
     public class MoveComponent : ComponentBase
     {
 
+        #region PUBLIC ATTRIBUTES
         public MotionStates State { get { return _state; } }
         public Direction Direction
         {
             get { return _direction; }
         }
-
-        private float JumpSpeed = 1200;
+        public float JumpSpeed = 1200;
         public Vector2 MaxVelocity = new Vector2(1200, 0);
         public Vector2 SprintVelocity = new Vector2(2400, 0);
         public Vector2 Acceleration = new Vector2(4000, 0);
@@ -23,6 +23,7 @@ namespace Game.Components
         public float FrictionInAir = 8000;
         public float Gravity = 3200;
         public float LandingTime = 0.1f;
+        #endregion
 
         private MotionStates _state = MotionStates.Stopped;
         private float _sprintMultiplier = 2f;
@@ -36,6 +37,7 @@ namespace Game.Components
         private bool _onFloor;
         private float _stickyTime;
 
+        #region PUBLIC API
         public MoveComponent(EntityBase entity) : base(entity) { }
 
         public override void Update(double delta)
@@ -97,6 +99,25 @@ namespace Game.Components
             }
         }
 
+        public void SetInput(Vector2 input, bool jump, bool sprint, bool crouch)
+        {
+            _jump = jump;
+            _sprint = sprint;
+            _crouch = crouch;
+            _inputVector = input;
+            if (input.X != 0)
+            {
+                _inputVector.X = input.X > 0 ? 1 : -1;
+            }
+
+            if (input.Y != 0)
+            {
+                _inputVector.Y = input.Y > 0 ? 1 : -1;
+            }
+
+        }
+        #endregion
+
         private void UpdateState(double delta)
         {
             var currentState = _state;
@@ -137,24 +158,6 @@ namespace Game.Components
             }
 
             _state = newState;
-        }
-
-        public void SetInput(Vector2 input, bool jump, bool sprint, bool crouch)
-        {
-            _jump = jump;
-            _sprint = sprint;
-            _crouch = crouch;
-            _inputVector = input;
-            if (input.X != 0)
-            {
-                _inputVector.X = input.X > 0 ? 1 : -1;
-            }
-
-            if (input.Y != 0)
-            {
-                _inputVector.Y = input.Y > 0 ? 1 : -1;
-            }
-
         }
     }
 }

@@ -8,8 +8,6 @@ using System.Collections.Generic;
 
 namespace Game.Components
 {
-
-
     public class AnimationComponent : ComponentBase
     {
         private class AnimationInfo
@@ -28,7 +26,7 @@ namespace Game.Components
             }
         }
 
-        static Dictionary<MotionStates, AnimationInfo> _animationMap = new()
+        private static Dictionary<MotionStates, AnimationInfo> _animationMap = new()
         {
             { MotionStates.Stopped, new AnimationInfo("idle", 1, "idle", 1) },
             { MotionStates.Rising, new AnimationInfo("rise_begin", 1, "rise", 1) },
@@ -38,12 +36,11 @@ namespace Game.Components
             { MotionStates.Running, new AnimationInfo("run", 2, "run", 2) },
         };
 
-        AnimationPlayer _animationPlayer;
-        AnimationInfo _currentAnimationInfo;
+        private AnimationPlayer _animationPlayer;
+        private AnimationInfo _currentAnimationInfo;
 
+        #region PUBLIC API
         public AnimationComponent(EntityBase entity) : base(entity) { }
-
-        private int _currentAnimationPart = 0; // 0 = start, 1+ = loop
 
         public override void Initialize()
         {
@@ -105,11 +102,13 @@ namespace Game.Components
 
             _currentAnimationPart = newAnimationPart;
         }
+        #endregion
+
+        private int _currentAnimationPart = 0; // 0 = start, 1+ = loop
 
         private AnimationInfo GetAnimationInfo()
         {
-            var player = Entity as Player;
-            var moveComponent = player?.GetComponent<MoveComponent>();
+            var moveComponent = Entity.GetComponent<MoveComponent>();
             if (moveComponent == null)
                 return null;
 

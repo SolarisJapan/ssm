@@ -3,9 +3,15 @@ namespace Game.Enums
     public enum EntityStates
     {
         Idle,
-        Moving,
-        Attacking,
+        CastingAbility,
         Dead
+    }
+
+    public enum AbilityStates
+    {
+        Ready,
+        Casting,
+        Cooldown
     }
 
     public enum MotionStates

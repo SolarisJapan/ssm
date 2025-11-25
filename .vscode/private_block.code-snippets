@@ -1,0 +1,26 @@
+{
+	"Public Methods Header": {
+		"prefix": "pubapi",
+		"body": [
+			"#region PUBLIC API",
+			"#endregion"
+		],
+		"description": "Insert a public methods section header"
+	},
+	"Godot Methods Header": {
+		"prefix": "gdapi",
+		"body": [
+			"#region GODOT METHODS",
+			"#endregion"
+		],
+		"description": "Insert a Godot methods section header"
+	},
+	"Public Attr Header": {
+		"prefix": "pubattr",
+		"body": [
+			"#region PUBLIC ATTRIBUTES",
+			"#endregion"
+		],
+		"description": "Insert a public attributes section header"
+	},
+}
