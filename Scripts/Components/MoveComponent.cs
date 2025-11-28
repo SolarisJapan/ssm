@@ -169,6 +169,9 @@ namespace Game.Components
         public void EndDash()
         {
             // restore collision mask
+            if (_state != MotionStates.Dashing)
+                return;
+
             Entity.Velocity = Vector2.Zero;
             _dashVelocity = Vector2.Zero;
             _state = MotionStates.Stopped;
