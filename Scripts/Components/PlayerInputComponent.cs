@@ -20,9 +20,16 @@ namespace Game.Components
             bool crouch = Input.IsActionPressed(InputActions.Crouch);
             player.GetComponent<MoveComponent>().SetInput(inputVector, jump, sprint, crouch);
 
+            if (Input.IsActionJustPressed(InputActions.Sprint))
+            {
+                player.GetComponent<MoveComponent>().Dash(0.15f, new Vector2(
+                    player.GetComponent<MoveComponent>().Direction == Direction.Forward ? 8000 : -8000,
+                    0));
+            }
+
             if (Input.IsActionJustPressed(InputActions.Attack))
             {
-                player.GetComponent<AbilityComponent>().CastAbility(AbilityEnum.Attack);
+                player.GetComponent<AbilityComponent>().CastAbility(AbilityEnum.Attack1);
             }
         }
         #endregion

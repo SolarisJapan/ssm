@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using Game.Entities;
 using Game.Core;
 using Game.Enums;
@@ -26,7 +25,7 @@ namespace Game.Components
             }
         }
 
-        private static Dictionary<MotionStates, AnimationInfo> _animationMap = new()
+        private static Dictionary<MotionStates, AnimationInfo> _motionAnimationMap = new()
         {
             { MotionStates.Stopped, new AnimationInfo("idle", 1, "idle", 1) },
             { MotionStates.Rising, new AnimationInfo("rise_begin", 1, "rise", 1) },
@@ -34,6 +33,12 @@ namespace Game.Components
             { MotionStates.Landing, new AnimationInfo("land", 1, "land", 1) },
             { MotionStates.Walking, new AnimationInfo("run_begin", 1, "run", 1) },
             { MotionStates.Running, new AnimationInfo("run", 2, "run", 2) },
+            { MotionStates.Dashing, new AnimationInfo("run", 4, "run", 4) },
+        };
+
+        private static Dictionary<EntityStates, AnimationInfo> _stateAnimationMap = new()
+        {
+            { EntityStates.CastingAbility, new AnimationInfo("attack", 1, "attack", 1) }
         };
 
         private AnimationPlayer _animationPlayer;
@@ -109,10 +114,21 @@ namespace Game.Components
         private AnimationInfo GetAnimationInfo()
         {
             var moveComponent = Entity.GetComponent<MoveComponent>();
+
+            // TODO: we need a way to force playing certain animations, e.g. attack
+            var stateComponent = Entity.GetComponent<StateComponent>();
+            AnimationInfo animationInfo;
+
+            if (stateComponent != null)
+            {
+                if (_stateAnimationMap.TryGetValue(stateComponent.State, out animationInfo))
+                    return animationInfo;
+            }
+
             if (moveComponent == null)
                 return null;
 
-            if (_animationMap.TryGetValue(moveComponent.State, out var animationInfo))
+            if (_motionAnimationMap.TryGetValue(moveComponent.State, out animationInfo))
                 return animationInfo;
 
             return null;

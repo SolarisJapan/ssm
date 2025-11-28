@@ -7,12 +7,14 @@ namespace Game.Entities
 {
     public partial class Mob : EntityBase
     {
-        private int _scale = 3;
 
         #region PUBLIC API
+        public Mob() : base()
+        {
+        }
+
         public override void OnEnterScene(SceneBase scene)
         {
-            Scale = new Vector2(_scale, _scale);
         }
         #endregion
         protected override List<ComponentBase> CreateAllComponents()

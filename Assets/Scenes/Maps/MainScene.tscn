@@ -26,7 +26,6 @@ script = ExtResource("1_45qeg")
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2(0.2, 0.2)
 motion_mirroring = Vector2(1920, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
@@ -45,6 +44,7 @@ texture = ExtResource("3_7f3pt")
 position = Vector2(-2495.4998, 0)
 scale = Vector2(44, 44)
 shape = SubResource("RectangleShape2D_cd3yu")
+debug_color = Color(0.14399427, 0.5675541, 0.8297236, 0.41960785)
 metadata/_edit_group_ = true
 
 [node name="platform2" type="StaticBody2D" parent="."]
