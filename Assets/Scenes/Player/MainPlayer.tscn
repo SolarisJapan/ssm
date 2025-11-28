@@ -2191,7 +2191,7 @@ terrain_set_0/mode = 0
 floor_max_angle = 1.0471976
 floor_snap_length = 8.0
 script = ExtResource("1_bm5lw")
-InitialPosition = Vector2(100, 100)
+InitialPosition = Vector2(200, 500)
 Acceleration = 99999.0
 AccelerationInAir = 100.0
 Gravity = 980.0
@@ -2255,9 +2255,14 @@ libraries = {
 autoplay = "idle"
 
 [node name="MainCamera" type="Camera2D" parent="."]
-position = Vector2(0, -30)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.35
+drag_top_margin = 0.25
+drag_right_margin = 0.35
+drag_bottom_margin = 0.55
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-7, -4)
