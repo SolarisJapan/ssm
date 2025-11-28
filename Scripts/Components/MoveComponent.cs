@@ -2,6 +2,7 @@ using Game.Entities;
 using Game.Core;
 using Game.Enums;
 using Godot;
+using System.Runtime.Serialization;
 
 namespace Game.Components
 {
@@ -14,21 +15,23 @@ namespace Game.Components
         {
             get { return _direction; }
         }
-        public float JumpSpeed = 1200;
-        public Vector2 MaxVelocity = new Vector2(1200, 0);
-        public Vector2 SprintVelocity = new Vector2(2400, 0);
-        public Vector2 Acceleration = new Vector2(4000, 0);
-        public Vector2 AccelerationInAir = new Vector2(1000, 0);
-        public float Friction = 10000;
-        public float FrictionInAir = 8000;
-        public float Gravity = 3200;
+        public float JumpSpeed;
+        public Vector2 MaxVelocity;
+        public Vector2 SprintVelocity;
+        public Vector2 Acceleration;
+        public Vector2 AccelerationInAir;
+        public float Friction;
+        public float FrictionInAir;
+
         public float LandingTime = 0.1f;
+        public float CoyoteTime;
         #endregion
 
         private MotionStates _state = MotionStates.Stopped;
         private float _sprintMultiplier = 2f;
         private Vector2 _velocity = Vector2.Zero;
         private Direction _direction = Direction.Forward;
+        private float _coyoteTimer = 0f;
 
         private Vector2 _inputVector = Vector2.Zero;
         private bool _jump;
@@ -37,23 +40,52 @@ namespace Game.Components
         private bool _onFloor;
         private float _stickyTime;
 
+        private uint _collisionMaskOld;
+        private float _dashTimer = 0;
+        private Vector2 _dashVelocity = Vector2.Zero;
+
         #region PUBLIC API
-        public MoveComponent(EntityBase entity) : base(entity) { }
+        public MoveComponent(EntityBase entity) : base(entity)
+        {
+        }
 
         public override void Update(double delta)
         {
             _velocity = Entity.Velocity;
 
-            // TODO status component to get states like grounded, climbing, etc.
+            var gravity = GameState.Instance.Settings.DefaultGravity;
+            bool wasOnFloor = _onFloor;
             _onFloor = Entity.IsOnFloor();
 
-            if (!_onFloor)
+            // TODO status component to get states like grounded, climbing, etc.
+            if (wasOnFloor && !_onFloor)
             {
-                _velocity.Y += Gravity * (float)delta;
+                GameLogger.Log($"Coyote time started {CoyoteTime}");
+                _coyoteTimer = CoyoteTime;
             }
-            else if (_jump)
+            else
+            {
+                _coyoteTimer = Mathf.MoveToward(_coyoteTimer, 0, (float)delta);
+            }
+
+            if (_state == MotionStates.Dashing)
+            {
+                Entity.Velocity = _dashVelocity;
+                Entity.MoveAndSlide();
+                _dashTimer -= (float)delta;
+                if (_dashTimer >= 0)
+                    return;
+                EndDash();
+            }
+
+            if ((_coyoteTimer > 0 && _jump) || (_onFloor && _jump))
             {
                 _velocity.Y = -JumpSpeed;
+                _coyoteTimer = 0;
+            }
+            else if (!_onFloor)
+            {
+                _velocity.Y += gravity * (float)delta;
             }
             else
             {
@@ -96,6 +128,7 @@ namespace Game.Components
                 GameLogger.Log($"Player fell out of bounds, resetting position. {Entity.Position}");
                 // reset
                 Entity.Position = new Vector2(0, 0);
+                Entity.Velocity = Vector2.Zero;
             }
         }
 
@@ -116,6 +149,29 @@ namespace Game.Components
             }
 
         }
+
+        public void Dash(float time, Vector2 velocity)
+        {
+            if (_state == MotionStates.Dashing)
+                return;
+            _dashVelocity = velocity;
+            _state = MotionStates.Dashing;
+            _dashTimer = time;
+            // during dashing we disable collision temporarily
+            _collisionMaskOld = Entity.GetCollisionMask();
+            Entity.SetCollisionMask(0);
+        }
+
+        public void EndDash()
+        {
+            // restore collision mask
+            Entity.Velocity = Vector2.Zero;
+            _dashVelocity = Vector2.Zero;
+            _state = MotionStates.Stopped;
+            _dashTimer = 0;
+            Entity.SetCollisionMask(_collisionMaskOld);
+        }
+
         #endregion
 
         private void UpdateState(double delta)

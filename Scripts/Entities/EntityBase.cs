@@ -55,6 +55,7 @@ namespace Game.Entities
         public EntityBase()
         {
             _entityId = GameObjID.GetNextID();
+            _components = CreateAllComponents();
         }
 
         virtual public void SetMaster(EntityBase master)
@@ -148,8 +149,6 @@ namespace Game.Entities
 
         virtual protected void InitializeComponents()
         {
-            _components = CreateAllComponents();
-
             for (int i = 0; i < _components.Count; i++)
             {
                 _components[i].Initialize();

@@ -30,7 +30,8 @@ namespace Game.Enums
         CrouchDown,
         CrouchIdle,
         CrouchMoving,
-        CrouchUp
+        CrouchUp,
+        Dashing
     }
 
     public enum Direction
