@@ -27,7 +27,7 @@ namespace Game.Objs
             _ready = true;
             Init();
             CollisionLayer = CollisionLayers.Objects;
-            CollisionMask = 0xFFFFFFFF & ~(CollisionLayers.Objects | CollisionLayers.Platforms);
+            CollisionMask = 0xFFFFFFFF & ~(CollisionLayers.Objects | CollisionLayers.Platforms | CollisionLayers.DashGhost);
             BodyEntered += HandleBodyEntered;
             BodyExited += HandleBodyExited;
             AreaEntered += HandleAreaEntered;

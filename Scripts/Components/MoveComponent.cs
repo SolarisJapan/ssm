@@ -41,6 +41,8 @@ namespace Game.Components
         private float _stickyTime;
 
         private uint _collisionMaskOld;
+        private uint _collisionLayerOld;
+
         private float _dashTimer = 0;
         private Vector2 _dashVelocity = Vector2.Zero;
 
@@ -123,7 +125,7 @@ namespace Game.Components
             Entity.MoveAndSlide();
 
             // TODO Debugging only, remove later
-            if (Entity.Position.Y >= 3000)
+            if (Entity.Position.Y >= 2000)
             {
                 GameLogger.Log($"Player fell out of bounds, resetting position. {Entity.Position}");
                 // reset
@@ -159,6 +161,8 @@ namespace Game.Components
             _dashTimer = time;
             // during dashing we disable collision temporarily
             _collisionMaskOld = Entity.GetCollisionMask();
+            _collisionLayerOld = Entity.GetCollisionLayer();
+            Entity.SetCollisionLayer(CollisionLayers.DashGhost);
             Entity.SetCollisionMask(0);
         }
 
@@ -169,6 +173,7 @@ namespace Game.Components
             _dashVelocity = Vector2.Zero;
             _state = MotionStates.Stopped;
             _dashTimer = 0;
+            Entity.SetCollisionLayer(_collisionLayerOld);
             Entity.SetCollisionMask(_collisionMaskOld);
         }
 

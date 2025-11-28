@@ -2252,9 +2252,12 @@ hframes = 12
 libraries = {
 &"": SubResource("AnimationLibrary_evtcc")
 }
+autoplay = "idle"
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(3, 3)
+[node name="MainCamera" type="Camera2D" parent="."]
+position = Vector2(0, -30)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-7, -4)

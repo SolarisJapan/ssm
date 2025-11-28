@@ -23,7 +23,7 @@ namespace Game.Components
             if (Input.IsActionJustPressed(InputActions.Sprint))
             {
                 player.GetComponent<MoveComponent>().Dash(0.15f, new Vector2(
-                    player.GetComponent<MoveComponent>().Direction == Direction.Forward ? 8000 : -8000,
+                    player.GetComponent<MoveComponent>().Direction == Direction.Forward ? 1000 : -1000,
                     0));
             }
 
