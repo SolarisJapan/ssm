@@ -2180,7 +2180,7 @@ _data = {
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bm5lw"]
-radius = 19.0
+radius = 20.0
 height = 62.0
 
 [sub_resource type="TileSet" id="TileSet_0xsjv"]

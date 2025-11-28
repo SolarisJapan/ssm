@@ -59,9 +59,24 @@ namespace Game.Core
                         GameLogger.Log("Dash forward");
                         break;
                     case 2:
-                        GameState.Instance.BulletMgr.FireInDirection(1, _caster, _caster.Position,
-                            moveComponent.Direction == Direction.Forward ? new Vector2(1, 0) : new Vector2(-1, 0)
-                        );
+                        var dirs = new Vector2[]
+                        {
+                            new Vector2(-1, 0),
+                            new Vector2(0.5f, -0.5f),
+                            new Vector2(1, 0),
+                            new Vector2(-0.5f, 0.5f),
+                            new Vector2(0, 1),
+                            new Vector2(0.5f, 0.5f),
+                            new Vector2(0, -1),
+                            new Vector2(-0.5f, -0.5f),
+                        };
+
+                        foreach (var dir in dirs)
+                        {
+                            GameState.Instance.BulletMgr.FireInDirection(1, _caster, _caster.Position,
+                                dir
+                            );
+                        }
 
                         _currentPipeTimeRemain = 0;
                         GameLogger.Log("Fire bullet");
