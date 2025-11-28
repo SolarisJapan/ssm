@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://seegp7laiyas"
-path="res://.godot/imported/3_16.png-e124a435b666dc47f9b75363dd2275b9.ctex"
+uid="uid://b7rpdooghc565"
+path="res://.godot/imported/tile-set-sci-fi-interior-platform.png-d5559348d3c99d53e101fc88d4aa61ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Texture/3_16.png"
-dest_files=["res://.godot/imported/3_16.png-e124a435b666dc47f9b75363dd2275b9.ctex"]
+source_file="res://Assets/Texture/Player/tile-set-sci-fi-interior-platform.png"
+dest_files=["res://.godot/imported/tile-set-sci-fi-interior-platform.png-d5559348d3c99d53e101fc88d4aa61ce.ctex"]
 
 [params]
 
